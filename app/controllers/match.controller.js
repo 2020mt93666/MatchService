@@ -4,7 +4,7 @@ const MatchModel = db.matches;
 // Create and Save a new match
 exports.create = async (req, res, next) => {
   // Validate request
-  if (!req.body.title) {
+  if (!req.body.name) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
@@ -13,9 +13,12 @@ exports.create = async (req, res, next) => {
 
   // Create a match
   const match = new MatchModel({
-    title: req.body.title,
-    description: req.body.description,
-    published: req.body.published ? req.body.published : false
+    name: req.body.name,
+    teamA: req.body.teamA,
+    teamB: req.body.teamB,
+    target: req.body.target,
+    actual: req.body.actual,
+    status: req.body.status
   });
 
   try {
@@ -31,10 +34,10 @@ exports.create = async (req, res, next) => {
 
 // Retrieve all matches from the database.
 exports.findAll = async (req, res) => {
-  const title = req.query.title;
-  var condition = title ? {
-    title: {
-      $regex: new RegExp(title),
+  const name = req.query.name;
+  var condition = name ? {
+    name: {
+      $regex: new RegExp(name),
       $options: "i"
     }
   } : {};
