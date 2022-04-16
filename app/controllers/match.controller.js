@@ -36,15 +36,20 @@ exports.create = async (req, res, next) => {
 exports.findAll = async (req, res) => {
   const name = req.query.name;
   var condition = name ? {
-    name: {
-      $regex: new RegExp(name),
-      $options: "i"
-    }
+    name: name
   } : {};
 
   try {
-    const data = await MatchModel.find(condition);
-    res.send(data);
+    if(name)
+    {
+      const data = await MatchModel.findOne(condition);
+      res.send(data);
+    }
+    else
+    {
+      const data = await MatchModel.find(condition);
+      res.send(data);
+    }    
   } catch (err) {
     res.status(500).send({
       message: err.message || "Some error occurred while retrieving matches."
